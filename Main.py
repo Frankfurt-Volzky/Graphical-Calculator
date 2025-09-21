@@ -20,11 +20,13 @@ def operation_finder(symbvols):
         if symbvols.index("-") != 0:
             op_f.append(symbvols.index("-"))
     except:pass
+    try:op_f.append(symbvols.index("^"))
+    except:pass
     try:op_f.append(symbvols.index("*"))
     except:pass
-    try:op_f.append(symbvols.index("**"))
-    except:pass
     try:op_f.append(symbvols.index("/"))
+    except:pass
+    try:op_f.append(symbvols.index("%"))
     except:pass
     op_f2 = sorted(op_f)
     print("Operations first order",op_f2)
@@ -61,32 +63,68 @@ def operation_uniter(operation):
     print("Выражение",true_operation)
     print('===================')
     return true_operation
+def check_fordouble(true_operation):
+    for i in range(len(true_operation)):
+        if "*" in true_operation[i] and len(true_operation[i]) >1:
+            true_operation[i] = true_operation[i][1:]
+            true_operation[i-1] = "**"
+        elif "/" in true_operation[i] and len(true_operation[i]) >1:
+            true_operation[i] = true_operation[i][1:]
+            true_operation[i-1] = "//"
+    return true_operation        
 def calc_answer(operation):
     while True:
-        operation_list = ["**","*","/","+","-"]
+        operation_list = ["**","^","*","/","+","-"]
         if "**" in operation:
             a = operation.index("**")
             b = float(operation[a-1])**float(operation[a+1])
+            print("EXECUTED **")
+        elif "^" in operation:
+            a = operation.index("^")
+            b = float(operation[a-1])**float(operation[a+1])
+            print("EXECUTED ^")
         elif "*" in operation:
             a = operation.index("*")
             b = float(operation[a-1])*float(operation[a+1])
+            print("EXECUTED *")
         elif "/" in operation:
             a = operation.index("/")
             b = float(operation[a-1])/float(operation[a+1])
+            print("EXECUTED /")
+        elif "//" in operation:
+            a = operation.index("//")
+            b = float(operation[a-1])//float(operation[a+1])
+            print("EXECUTED //")
+        elif "%" in operation:
+            a = operation.index("%")
+            b = float(operation[a-1])%float(operation[a+1])
+            print("EXECUTED %")
         elif "+" in operation:
             a = operation.index("+")
             b = float(operation[a-1])+float(operation[a+1])
+            print("EXECUTED +")
         elif "-" in operation:
             a = operation.index("-")
             b = float(operation[a-1])-float(operation[a+1])
+            print("EXECUTED -")
+        #elif len(operation) > 1:
+        #    for i in range(len(operation)):
+        #        if "sin" in operation[i]:
+        #            sin = operation[i]
+        #            print("SIN")
         else:print("OPERATION FINISHED");break
         q = []
         q.append(b)
         operation = operation[:a-1]+q+operation[a+1+1:]
         print(operation)
+    answer = operation[0]
+    try: answer = int(answer)
+    except:pass
+    return answer
 while True:
     operation = get_needed()
     true_operation = operation_uniter(operation)
-    calc_answer(true_operation)
-    
+    true_operation = check_fordouble(true_operation)
+    answer = calc_answer(true_operation)
+    print(answer)
     
