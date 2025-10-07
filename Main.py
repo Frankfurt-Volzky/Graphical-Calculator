@@ -1,7 +1,7 @@
-import math
 import matplotlib
 from random import randint
-
+import matplotlib.pyplot as plt
+import numpy as np
 from math import *
 def get_needed():
     operation = input()
@@ -240,6 +240,25 @@ def calc_answer(operation):
     try: answer = int(answer)
     except:pass
     return answer
+def generate_color():
+    color_list = ["red","green","blue","purple","yellow","brown","white","black","pink","lime","gray"]
+    color = color_list[randint(0,len(color_list))]
+    return color
+#def build_grapf():
+#    color = generate_color()
+#    x = np.linspace(-10, 10, 1000)
+#    y = x
+#    y0 = x*0
+#    fig = plt.figure(figsize = (10, 5))
+#    plt.plot(x, y)
+#    plt.axhline(y=0,label="ox axis", color='red', linestyle='--')
+#    plt.axvline(x=0,label="oy axis", color='blue', linestyle=':')
+#    plt.legend()
+#    plt.grid(True, linestyle =':')
+#    plt.title('TEST')
+#    plt.xlabel('x-axis')
+#    plt.ylabel('y-axis')
+#    plt.show()
 while True:
     operation = get_needed()
     text = operation
@@ -249,4 +268,3 @@ while True:
     true_operation = check_fordouble(true_operation)
     answer = calc_answer(true_operation)
     print(text,"=",answer)
-    
