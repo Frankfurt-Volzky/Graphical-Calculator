@@ -3,6 +3,7 @@ from random import randint
 import matplotlib.pyplot as plt
 import numpy as np
 from math import *
+import math
 def get_needed():
     operation = input()
     #if ("-" not in operation) and  ("+" not in operation) and ("/" not in operation) and ("*" not in operation) and ("**" not in operation):
@@ -104,7 +105,7 @@ def calc_answer(operation):
                         aa = sina.find("(")+1
                         bb = sina.find(")")
                         sina = sina[aa:bb]
-                        print(sina)
+                        print("sina",sina)
                         h = math.sin(int(sina) * math.pi / 180)
                         print("SIN:",h)
                         h = round(h,2)
@@ -240,6 +241,99 @@ def calc_answer(operation):
     try: answer = int(answer)
     except:pass
     return answer
+def sina_finder(operation):
+    sina_symbvol = ["2","n","s","g"]
+    while True:
+        for i in range(len(operation)):
+            #print(i)
+            try:
+                if operation[i]=="(" and operation[i-1] in sina_symbvol:
+                    if operation[i-1] == "2":
+                        temp_op = operation[i-5:]
+                        for q in range(len(temp_op)):
+                            if temp_op[q]==")":
+                                temp_op = temp_op[:q+1]
+                                temp_op = do_calc_alg(temp_op)
+                                operation = operation[:i-5]+str(temp_op)+operation[i-5+q]
+                                break
+                    if operation[i-4] == "a":
+                        temp_op = operation[i-4:]
+                        for q in range(len(temp_op)):
+                            if temp_op[q]==")":
+                                temp_op = temp_op[:q+1]
+                                temp_op = do_calc_alg(temp_op)
+                                operation = operation[:i-4]+str(temp_op)+operation[i-4+q]
+                                break                            
+                    else:
+                        temp_op = operation[i-3:]
+                        copy = temp_op
+                        for q in range(len(temp_op)):
+                            if temp_op[q]==")":
+                                temp_op = temp_op[:q+1]
+                                temp_op = do_calc_alg(temp_op)
+                                operation = operation[:i-3]+str(temp_op)+operation[i-3+len(copy)-2:]
+                                print("operation[:i-3]",operation[:i-3])
+                                print("Temp_op",temp_op)
+                                #print("operation[i-3+q-1]",operation[i-3+q])
+                                print("OPERATION after sin:",operation)
+                                break     
+            except:print("NO TRIGONOMETRY FOUND");break
+        brackets_open = operation.count("(")
+        if brackets_open == 0:break
+    print("")
+    return operation           
+def do_bracket(operation):
+    operation = sina_finder(operation)
+    #sina_symbvol = ["2","n","s","g"]
+    while True:
+        brackets_open = operation.count("(")
+        brackets_close = operation.count(")")
+        print(brackets_open,brackets_close)
+        if brackets_open != brackets_close:print("() are not equal - ERROR");return False
+        elif brackets_open == 0 and brackets_close==0:print("NO () found");operation = do_calc_alg(operation);return operation
+        else:
+            for i in range(len(operation)):
+                #try:
+                #    if operation[i]=="(" and operation[i-1] in sina_symbvol:
+                #        if operation[i-1] == "2":
+                #            temp_op = operation[i-5:]
+                #            for q in range(len(temp_op)):
+                #                if temp_op[q]==")":
+                #                    temp_op = temp_op[:q+1]
+                #                    temp_op = do_calc_alg(temp_op)
+                #                    operation = operation[:i-5]+str(temp_op)+operation[i-5+q]
+                #                    break
+                #        if operation[i-4] == "a":
+                #            temp_op = operation[i-4:]
+                #            for q in range(len(temp_op)):
+                #                if temp_op[q]==")":
+                #                    temp_op = temp_op[:q+1]
+                #                    temp_op = do_calc_alg(temp_op)
+                #                    operation = operation[:i-4]+str(temp_op)+operation[i-4+q]
+                #                    break                            
+                #        else:
+                #            temp_op = operation[i-3:]
+                #            for q in range(len(temp_op)):
+                #                if temp_op[q]==")":
+                #                    temp_op = temp_op[:q+1]
+                #                    temp_op = do_calc_alg(temp_op)
+                #                    operation = operation[:i-3]+str(temp_op)+operation[i-3+q-1]
+                #                    print("OPERATION after sin:",operation)
+                #                    break                  
+                #except:print("NO TRIGONOMETRY FOUND")            
+                if operation[i] == "(":
+                    bracket_opening = i
+                if operation[i] == ")":
+                    bracket_closing = i
+            if bracket_opening==0:break
+            else:
+                print(bracket_closing)
+                bracket_op = operation[bracket_opening+1:bracket_closing]
+                print(bracket_op)
+                bracket_op = do_calc_alg(bracket_op)
+                operation = operation[:bracket_opening]+str(bracket_op)+operation[bracket_closing+1:]
+                print(operation)
+        print(operation)
 def generate_color():
     color_list = ["red","green","blue","purple","yellow","brown","white","black","pink","lime","gray"]
     color = color_list[randint(0,len(color_list))]
@@ -259,12 +353,15 @@ def generate_color():
 #    plt.xlabel('x-axis')
 #    plt.ylabel('y-axis')
 #    plt.show()
-while True:
-    operation = get_needed()
-    text = operation
-    if "(" in operation:
-        print("FOUND (), start alogirithm with them")
+def do_calc_alg(operation):
     true_operation = operation_uniter(operation)
     true_operation = check_fordouble(true_operation)
     answer = calc_answer(true_operation)
+    return answer
+while True:
+    operation = get_needed()
+    text = operation
+    #if "(" in operation:
+    #    print("FOUND (), start alogirithm with them")
+    answer = do_bracket(operation)
     print(text,"=",answer)
